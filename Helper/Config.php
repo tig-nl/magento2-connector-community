@@ -13,6 +13,7 @@ use Magento\Eav\Model\Config as EavConfig;
 use Magento\Eav\Model\Entity\Attribute\AbstractAttribute;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Encryption\Encryptor;
 use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\File\Uploader;
@@ -410,19 +411,24 @@ class Config
      * @var ScopeConfigInterface $scopeConfig
      */
     protected $scopeConfig;
+    /**
+     * @var RequestInterface
+     */
+    private $request;
 
     /**
      * Config constructor
      *
-     * @param Encryptor                     $encryptor
-     * @param Serializer                    $serializer
-     * @param EavConfig                     $eavConfig
-     * @param StoreManagerInterface         $storeManager
+     * @param Encryptor $encryptor
+     * @param Serializer $serializer
+     * @param EavConfig $eavConfig
+     * @param StoreManagerInterface $storeManager
      * @param CatalogInventoryConfiguration $catalogInventoryConfiguration
-     * @param Filesystem                    $filesystem
-     * @param MediaConfig                   $mediaConfig
-     * @param ScopeConfigInterface          $scopeConfig
+     * @param Filesystem $filesystem
+     * @param MediaConfig $mediaConfig
+     * @param ScopeConfigInterface $scopeConfig
      *
+     * @param RequestInterface $request
      * @throws FileSystemException
      */
     public function __construct(
@@ -433,7 +439,8 @@ class Config
         CatalogInventoryConfiguration $catalogInventoryConfiguration,
         Filesystem $filesystem,
         MediaConfig $mediaConfig,
-        ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+        RequestInterface $request
     ) {
         $this->encryptor                     = $encryptor;
         $this->serializer                    = $serializer;
@@ -443,6 +450,7 @@ class Config
         $this->catalogInventoryConfiguration = $catalogInventoryConfiguration;
         $this->mediaDirectory                = $filesystem->getDirectoryWrite(DirectoryList::MEDIA);
         $this->scopeConfig                   = $scopeConfig;
+        $this->request = $request;
     }
 
     /**
@@ -453,12 +461,8 @@ class Config
      */
     public function getScopedConfig($configKey)
     {
-        $storeviewcode = (isset($_REQUEST['storeview'])) ? $_REQUEST['storeview'] : null;
-        if ($storeviewcode) {
-            return $this->scopeConfig->getValue($configKey, 'store', $storeviewcode);
-        }
-
-        return $this->scopeConfig->getValue($configKey);
+        $storeViewCode = $this->request->getParam('storeview');
+        return $this->scopeConfig->getValue($configKey, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeViewCode);
     }
 
     /**

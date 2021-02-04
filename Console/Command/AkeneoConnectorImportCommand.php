@@ -6,6 +6,7 @@ use Akeneo\Connector\Api\ImportRepositoryInterface;
 use Akeneo\Connector\Helper\Config as ConfigHelper;
 use Akeneo\Connector\Job\Import;
 use Magento\Framework\App\Area;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\State;
 use Magento\Framework\Data\Collection;
 use Magento\Framework\Exception\LocalizedException;
@@ -57,19 +58,25 @@ class AkeneoConnectorImportCommand extends Command
      * @var ConfigHelper $configHelper
      */
     protected $configHelper;
+    /**
+     * @var RequestInterface
+     */
+    private $request;
 
     /**
      * AkeneoConnectorImportCommand constructor
      *
      * @param ImportRepositoryInterface $importRepository
-     * @param State                     $appState
-     * @param ConfigHelper              $configHelper
-     * @param null                      $name
+     * @param State $appState
+     * @param ConfigHelper $configHelper
+     * @param RequestInterface $request
+     * @param null $name
      */
     public function __construct(
         ImportRepositoryInterface $importRepository,
         State $appState,
         ConfigHelper $configHelper,
+        RequestInterface $request,
         $name = null
     ) {
         parent::__construct($name);
@@ -77,6 +84,7 @@ class AkeneoConnectorImportCommand extends Command
         $this->appState         = $appState;
         $this->importRepository = $importRepository;
         $this->configHelper     = $configHelper;
+        $this->request          = $request;
     }
 
     /**
@@ -120,7 +128,7 @@ class AkeneoConnectorImportCommand extends Command
         }
 
         /** @TODO Better way to register variables */
-        $_REQUEST['storeview'] = $input->getOption('storeview');
+        $this->request->setParam('storeview', $input->getOption('storeview'));
 
         /** @var string $code */
         $code = $input->getOption(self::IMPORT_CODE);
