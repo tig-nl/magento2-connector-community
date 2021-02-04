@@ -2,18 +2,18 @@
 
 namespace Akeneo\Connector\Console\Command;
 
+use Akeneo\Connector\Api\ImportRepositoryInterface;
 use Akeneo\Connector\Helper\Config as ConfigHelper;
+use Akeneo\Connector\Job\Import;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
 use Magento\Framework\Data\Collection;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Phrase;
-use Akeneo\Connector\Api\ImportRepositoryInterface;
-use Akeneo\Connector\Job\Import;
-use \Symfony\Component\Console\Command\Command;
-use \Symfony\Component\Console\Input\InputInterface;
-use \Symfony\Component\Console\Output\OutputInterface;
-use \Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class AkeneoConnectorImportCommand
@@ -84,12 +84,26 @@ class AkeneoConnectorImportCommand extends Command
      */
     protected function configure()
     {
-        $this->setName('akeneo_connector:import')->setDescription('Import Akeneo data to Magento')->addOption(
-            self::IMPORT_CODE,
-            null,
-            InputOption::VALUE_REQUIRED,
-            'Code of import job to run. To run multiple jobs consecutively, use comma-separated import job codes'
-        );
+        $options = [
+            new InputOption(
+                self::IMPORT_CODE,
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Code of import job to run. To run multiple jobs consecutively, use comma-separated import job codes'
+            ),
+            new InputOption(
+                'storeview',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'storeview to load configuration from'
+            )
+        ];
+
+        $this->setName('akeneo_connector:import')
+            ->setDescription('Import Akeneo data to Magento')
+            ->setDefinition(
+                $options
+            );
     }
 
     /**
@@ -104,6 +118,9 @@ class AkeneoConnectorImportCommand extends Command
             $message = __('Area code already set')->getText();
             $output->writeln($message);
         }
+
+        /** @TODO Better way to register variables */
+        $_REQUEST['storeview'] = $input->getOption('storeview');
 
         /** @var string $code */
         $code = $input->getOption(self::IMPORT_CODE);
@@ -213,7 +230,8 @@ class AkeneoConnectorImportCommand extends Command
      *
      * @return void
      */
-    protected function runImport(Import $import, OutputInterface $output, $family = null) {
+    protected function runImport(Import $import, OutputInterface $output, $family = null)
+    {
         try {
             $import->setStep(0);
             if ($family) {
@@ -263,6 +281,7 @@ class AkeneoConnectorImportCommand extends Command
         // Options
         $this->displayComment(__('Options:'), $output);
         $this->displayInfo(__('--code'), $output);
+        $this->displayInfo(__('--storeview'), $output);
         $output->writeln('');
 
         // Codes
