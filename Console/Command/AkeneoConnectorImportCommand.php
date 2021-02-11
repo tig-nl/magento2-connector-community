@@ -100,10 +100,10 @@ class AkeneoConnectorImportCommand extends Command
                 'Code of import job to run. To run multiple jobs consecutively, use comma-separated import job codes'
             ),
             new InputOption(
-                'storeview',
+                'store',
                 null,
                 InputOption::VALUE_OPTIONAL,
-                'storeview to load configuration from'
+                'store code to load configuration from'
             )
         ];
 
@@ -128,7 +128,7 @@ class AkeneoConnectorImportCommand extends Command
         }
 
         /** @TODO Better way to register variables */
-        $this->request->setParam('storeview', $input->getOption('storeview'));
+        $this->request->setParam('store', $input->getOption('store'));
 
         /** @var string $code */
         $code = $input->getOption(self::IMPORT_CODE);
@@ -289,7 +289,7 @@ class AkeneoConnectorImportCommand extends Command
         // Options
         $this->displayComment(__('Options:'), $output);
         $this->displayInfo(__('--code'), $output);
-        $this->displayInfo(__('--storeview'), $output);
+        $this->displayInfo(__('--store'), $output);
         $output->writeln('');
 
         // Codes

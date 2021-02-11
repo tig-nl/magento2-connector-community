@@ -461,8 +461,8 @@ class Config
      */
     public function getScopedConfig($configKey)
     {
-        $storeViewCode = $this->request->getParam('storeview');
-        return $this->scopeConfig->getValue($configKey, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeViewCode);
+        $storeCode = $this->request->getParam('store');
+        return $this->scopeConfig->getValue($configKey, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeCode);
     }
 
     /**
