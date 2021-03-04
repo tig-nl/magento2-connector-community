@@ -1,5 +1,10 @@
-# Akeneo Connector for Magento 2:
+# Multiple Akeneo Connector for Magento 2:
 
+Fork to support multiple Akeneo's with one Magento 2.
+* Added config options for store views
+* Added store view tag to command line commando's
+* Added store switcher to admin: System > Import 
+ 
 Akeneo Connector for Magento 2 is a module that allows you to export your catalog data and structure from Akeneo PIM to Magento 2 through API calls. This version of the connector is designed to work with Akeneo PIM Community Edition. It could either work with Magento 2 Community Edition or Enterprise Edition.
 
 You can discover Akeneo Connector on the [Akeneo Marketplace](https://marketplace.akeneo.com/extension/akeneo-connector-magento-2-community-edition) or on the [Magento Marketplace](https://marketplace.magento.com/akeneo-module-magento2-connector-community.html).

@@ -20,7 +20,7 @@
         <?php /** @var mixed $import */ ?>
         <?php foreach ($collection as $import): ?>
             <?php if ($block->isAllowed($import->getCode())): ?>
-            <div class="import-type" onclick="Akeneo_Connector.type('<?php echo $import->getCode() ?>', this)">
+            <div class="import-type" onclick="Akeneo_Connector.type('<?php echo $import->getCode() ?>', this, jQuery('input#store_switcher').val())">
                 <?php echo $import->getName() ?>
             </div>
             <?php endif; ?>

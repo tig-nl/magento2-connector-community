@@ -12,7 +12,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
-        <section id="akeneo_connector" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="0" showInStore="0">
+        <section id="akeneo_connector" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="0" showInStore="1">
             <label>Akeneo Connector</label>
             <tab>catalog</tab>
             <resource>Akeneo_Connector::config_akeneo_connector</resource>
@@ -27,33 +27,33 @@
                     <frontend_model>Akeneo\Connector\Block\Adminhtml\System\Config\DocumentationLink</frontend_model>
                 </field>
             </group>
-            <group id="akeneo_api" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+            <group id="akeneo_api" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="1">
                 <label>Akeneo API Configuration</label>
-                <field id="base_url" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="base_url" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="1">
                     <label>Akeneo base URL</label>
                 </field>
-                <field id="username" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="username" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="1">
                     <label>Akeneo username</label>
                     <comment>The Akeneo user should have permissions to list</comment>
                     <validate>no-whitespace</validate>
                 </field>
-                <field id="password" translate="label" type="obscure" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="password" translate="label" type="obscure" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="1">
                     <label>Akeneo password</label>
                     <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                 </field>
-                <field id="client_id" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="client_id" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="1">
                     <label>Akeneo API client ID</label>
                     <validate>no-whitespace</validate>
                 </field>
-                <field id="client_secret" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="client_secret" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="1">
                     <label>Akeneo API client secret</label>
                     <validate>no-whitespace</validate>
                 </field>
-                <field id="api_test" translate="label" type="button" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="api_test" translate="label" type="button" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="1">
                     <frontend_model>Akeneo\Connector\Block\Adminhtml\System\Config\Api\Test</frontend_model>
                     <label>Test API credentials</label>
                 </field>
-                <field id="edition" translate="label comment" type="select" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="edition" translate="label comment" type="select" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="1">
                     <label>Akeneo Edition</label>
                     <source_model>Akeneo\Connector\Model\Source\Edition</source_model>
                 </field>
@@ -61,12 +61,12 @@
                     <label>Pagination size</label>
                     <comment>Must be a value between 1 and 100. Default value is 100.</comment>
                 </field>
-                <field id="admin_channel" translate="label comment" type="select" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="admin_channel" translate="label comment" type="select" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="1">
                     <label>Admin Website Channel</label>
                     <source_model>Akeneo\Connector\Model\Source\Filters\Channel</source_model>
                     <comment>Set Magento Admin website default Akeneo channel</comment>
                 </field>
-                <field id="website_mapping" translate="label" type="text" sortOrder="91" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="website_mapping" translate="label" type="text" sortOrder="91" showInDefault="1" showInWebsite="0" showInStore="1">
                     <label>Website Mapping</label>
                     <frontend_model>Akeneo\Connector\Block\Adminhtml\System\Config\Form\Field\Website</frontend_model>
                     <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
@@ -74,9 +74,9 @@
                     <validate>required-entry</validate>
                 </field>
             </group>
-            <group id="products_filters" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+            <group id="products_filters" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="1">
                 <label>Filter products</label>
-                <field id="mode" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="mode" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="1">
                     <label>Mode</label>
                     <source_model>Akeneo\Connector\Model\Source\Filters\Mode</source_model>
                 </field>
@@ -190,7 +190,7 @@
                         <field id="updated_mode">SINCE LAST N DAYS</field>
                     </depends>
                 </field>
-                <field id="families" translate="label comment" type="multiselect" sortOrder="140" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="families" translate="label comment" type="multiselect" sortOrder="140" showInDefault="1" showInWebsite="0" showInStore="1">
                     <label>Families</label>
                     <source_model>Akeneo\Connector\Model\Source\Filters\Family</source_model>
                     <comment>

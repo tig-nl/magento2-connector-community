@@ -2,28 +2,26 @@
 
 namespace Akeneo\Connector\Helper;
 
-use Magento\Catalog\Model\Product\Link;
 use Akeneo\Connector\Model\Source\Edition;
-use Magento\Framework\App\Helper\AbstractHelper;
-use Magento\Framework\App\Helper\Context;
-use Magento\Framework\Encryption\Encryptor;
+use Magento\Catalog\Helper\Product as ProductHelper;
+use Magento\Catalog\Model\Product\Link;
+use Magento\Catalog\Model\Product\Media\Config as MediaConfig;
+use Magento\CatalogInventory\Model\Configuration as CatalogInventoryConfiguration;
 use Magento\Directory\Helper\Data as DirectoryHelper;
-use Magento\Framework\Exception\FileSystemException;
-use Magento\Store\Api\Data\StoreInterface;
-use Magento\Store\Api\Data\WebsiteInterface;
-use Magento\Store\Model\ScopeInterface;
 use Magento\Directory\Model\Currency;
 use Magento\Eav\Model\Config as EavConfig;
-use Magento\Store\Model\StoreManagerInterface;
-use Magento\CatalogInventory\Model\Configuration as CatalogInventoryConfiguration;
-use Magento\Catalog\Model\Product\Media\Config as MediaConfig;
+use Magento\Eav\Model\Entity\Attribute\AbstractAttribute;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\App\RequestInterface;
+use Magento\Framework\Encryption\Encryptor;
+use Magento\Framework\Exception\FileSystemException;
+use Magento\Framework\File\Uploader;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\Directory\WriteInterface;
-use Magento\Framework\File\Uploader;
-use Magento\Framework\App\Filesystem\DirectoryList;
-use Magento\Eav\Model\Entity\Attribute\AbstractAttribute;
-use Magento\Catalog\Helper\Product as ProductHelper;
-use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Api\Data\StoreInterface;
+use Magento\Store\Model\ScopeInterface;
+use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * Class Config
@@ -413,19 +411,24 @@ class Config
      * @var ScopeConfigInterface $scopeConfig
      */
     protected $scopeConfig;
+    /**
+     * @var RequestInterface
+     */
+    private $request;
 
     /**
      * Config constructor
      *
-     * @param Encryptor                     $encryptor
-     * @param Serializer                    $serializer
-     * @param EavConfig                     $eavConfig
-     * @param StoreManagerInterface         $storeManager
+     * @param Encryptor $encryptor
+     * @param Serializer $serializer
+     * @param EavConfig $eavConfig
+     * @param StoreManagerInterface $storeManager
      * @param CatalogInventoryConfiguration $catalogInventoryConfiguration
-     * @param Filesystem                    $filesystem
-     * @param MediaConfig                   $mediaConfig
-     * @param ScopeConfigInterface          $scopeConfig
+     * @param Filesystem $filesystem
+     * @param MediaConfig $mediaConfig
+     * @param ScopeConfigInterface $scopeConfig
      *
+     * @param RequestInterface $request
      * @throws FileSystemException
      */
     public function __construct(
@@ -436,7 +439,8 @@ class Config
         CatalogInventoryConfiguration $catalogInventoryConfiguration,
         Filesystem $filesystem,
         MediaConfig $mediaConfig,
-        ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+        RequestInterface $request
     ) {
         $this->encryptor                     = $encryptor;
         $this->serializer                    = $serializer;
@@ -446,6 +450,19 @@ class Config
         $this->catalogInventoryConfiguration = $catalogInventoryConfiguration;
         $this->mediaDirectory                = $filesystem->getDirectoryWrite(DirectoryList::MEDIA);
         $this->scopeConfig                   = $scopeConfig;
+        $this->request = $request;
+    }
+
+    /**
+     * Add scopeType to get scoped values out of config
+     *
+     * @param $configKey
+     * @return mixed
+     */
+    public function getScopedConfig($configKey)
+    {
+        $storeCode = $this->request->getParam('store');
+        return $this->scopeConfig->getValue($configKey, \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeCode);
     }
 
     /**
@@ -455,7 +472,7 @@ class Config
      */
     public function getAkeneoApiBaseUrl()
     {
-        return $this->scopeConfig->getValue(self::AKENEO_API_BASE_URL);
+        return $this->getScopedConfig(self::AKENEO_API_BASE_URL);
     }
 
     /**
@@ -465,7 +482,7 @@ class Config
      */
     public function getAkeneoApiUsername()
     {
-        return $this->scopeConfig->getValue(self::AKENEO_API_USERNAME);
+        return $this->getScopedConfig(self::AKENEO_API_USERNAME);
     }
 
     /**
@@ -477,7 +494,7 @@ class Config
     public function getAkeneoApiPassword()
     {
         /** @var string $password */
-        $password = $this->scopeConfig->getValue(self::AKENEO_API_PASSWORD);
+        $password = $this->getScopedConfig(self::AKENEO_API_PASSWORD);
 
         return $this->encryptor->decrypt($password);
     }
@@ -489,7 +506,7 @@ class Config
      */
     public function getAkeneoApiClientId()
     {
-        return $this->scopeConfig->getValue(self::AKENEO_API_CLIENT_ID);
+        return $this->getScopedConfig(self::AKENEO_API_CLIENT_ID);
     }
 
     /**
@@ -499,7 +516,7 @@ class Config
      */
     public function getAkeneoApiClientSecret()
     {
-        return $this->scopeConfig->getValue(self::AKENEO_API_CLIENT_SECRET);
+        return $this->getScopedConfig(self::AKENEO_API_CLIENT_SECRET);
     }
 
     /**
@@ -712,7 +729,7 @@ class Config
      */
     public function getFamiliesFilter()
     {
-        return $this->scopeConfig->getValue(self::PRODUCTS_FILTERS_FAMILIES);
+        return $this->getScopedConfig(self::PRODUCTS_FILTERS_FAMILIES);
     }
 
     /**
@@ -786,7 +803,7 @@ class Config
      */
     public function getAdminDefaultChannel()
     {
-        return $this->scopeConfig->getValue(self::AKENEO_API_ADMIN_CHANNEL);
+        return $this->getScopedConfig(self::AKENEO_API_ADMIN_CHANNEL);
     }
 
     /**
@@ -828,7 +845,7 @@ class Config
         }
 
         /** @var string $websiteMapping */
-        $websiteMapping = $this->scopeConfig->getValue(self::AKENEO_API_WEBSITE_MAPPING);
+        $websiteMapping = $this->getScopedConfig(self::AKENEO_API_WEBSITE_MAPPING);
         if (empty($websiteMapping)) {
             return $mapping;
         }

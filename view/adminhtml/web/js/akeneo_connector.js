@@ -19,7 +19,8 @@ define(['jquery'], function ($) {
             identifier: null,
             currentFamily: null,
             familyCount: 0,
-            families: null
+            families: null,
+            store: 0
         },
 
         init: function (url, urlProduct, console) {
@@ -28,12 +29,13 @@ define(['jquery'], function ($) {
             this.console = $(console);
         },
 
-        type: function (type, object) {
+        type: function (type, object, store) {
             this.options.type = type;
             this.step('type', $(object));
             this.options.currentFamily = null;
             this.options.familyCount = null;
             this.options.families = null;
+            this.options.store = store;
         },
 
         step: function (type, object) {
@@ -65,7 +67,8 @@ define(['jquery'], function ($) {
                 type: 'post',
                 context: this,
                 data: {
-                    'identifier': akeneoConnector.options.identifier
+                    'identifier': akeneoConnector.options.identifier,
+                    'store' : akeneoConnector.options.store
                 },
                 success: function (response) {
                     if (response.message) {
@@ -101,7 +104,8 @@ define(['jquery'], function ($) {
                         'code': akeneoConnector.options.type,
                         'step': akeneoConnector.options.step,
                         'identifier': akeneoConnector.options.identifier,
-                        'family': akeneoConnector.options.currentFamily
+                        'family': akeneoConnector.options.currentFamily,
+                        'store' : akeneoConnector.options.store
                     },
                     success: function (response) {
                         akeneoConnector.removeWaiting();
