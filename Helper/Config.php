@@ -466,6 +466,14 @@ class Config
     }
 
     /**
+     * @return mixed
+     */
+    public function getScopedConfigStoreParam()
+    {
+        return $this->request->getParam('store');
+    }
+
+    /**
      * Retrieve Akeneo base URL
      *
      * @return string
