@@ -142,6 +142,11 @@ class Entities
             $fragments[] = $tableSuffix;
         }
 
+        //Add specific store to database table name to prevent overwriting when two jobs run at the same time
+        if (self::TABLE_PREFIX == 'tmp') {
+            $fragments[] = $this->configHelper->getScopedConfigStoreParam();
+        }
+
         return $this->getTable(join('_', $fragments));
     }
 
